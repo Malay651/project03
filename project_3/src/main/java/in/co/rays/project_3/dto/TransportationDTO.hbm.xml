@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 17-Feb-2026, 11:31:28 am by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <subclass name="in.co.rays.project_3.dto.TransportationDTO" extends="in.co.rays.project_3.dto.BaseDTO" discriminator-value="TransportationDTO" lazy="false">
+        <property name="Description" type="java.lang.String">
+            <column name="DESCRIPTION" />
+        </property>
+        <property name="Mode" type="java.lang.String">
+            <column name="MODE" />
+        </property>
+        <property name="orderDate" type="java.util.Date">
+            <column name="ORDERDATE" />
+        </property>
+        <property name="Cost" type="java.lang.String">
+            <column name="COST" />
+        </property>
+    </subclass>
+</hibernate-mapping>
