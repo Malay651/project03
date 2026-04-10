@@ -272,4 +272,17 @@ public final class ModelFactory {
 		}
 		return productModel;
 	}
+	public ThemeModelInt getThemeModel() {
+		ThemeModelInt ThemeModel = (ThemeModelInt) modelCache.get("ThemeModel");
+		if (ThemeModel == null) {
+			if ("Hibernate".equals(DATABASE)) {
+				ThemeModel = new ThemeModelHibImpl();
+			}
+			if ("JDBC".equals(DATABASE)) {
+				ThemeModel = new ThemeModelHibImpl();
+			}
+			modelCache.put("ThemeModel", ThemeModel);
+		}
+		return ThemeModel;
+	}
 }

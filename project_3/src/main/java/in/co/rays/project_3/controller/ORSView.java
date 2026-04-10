@@ -122,6 +122,10 @@ public interface ORSView {
 
 	public String TIMETABLE_LIST_CTL = APP_CONTEXT + "/ctl/TimeTableListCtl";
 
+	public String THEME_CTL = APP_CONTEXT + "/ctl/ThemeCtl";
+
+	public String THEME_LIST_CTL = APP_CONTEXT + "/ctl/ThemeListCtl";
+
 	public String PRODUCT_CTL = APP_CONTEXT + "/ctl/ProductCtl";
 
 	public String PRODUCT_LIST_CTL = APP_CONTEXT + "/ctl/ProductListCtl";
@@ -166,5 +170,8 @@ public interface ORSView {
 	public String DESCRIPTION_LIST_CTL = APP_CONTEXT + "/ctl/DescriptionListCtl";
 	public String DESCRIPTION_LIST_VIEW = PAGE_FOLDER + "/DescriptionListView.jsp";
 	
+
+	public String THEME_LIST_VIEW = PAGE_FOLDER + "/ThemeListView.jsp";
+	public String THEME_VIEW = PAGE_FOLDER + "/ThemeView.jsp";
 
 }

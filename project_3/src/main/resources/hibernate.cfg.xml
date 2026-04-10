@@ -61,6 +61,8 @@
 
 		<mapping
 			resource="in/co/rays/project_3/hbm/CandidateDTO.hbm.xml" />
+			<mapping
+			resource="in/co/rays/project_3/hbm/ThemeDTO.hbm.xml" />
 	</session-factory>
 
 </hibernate-configuration>
