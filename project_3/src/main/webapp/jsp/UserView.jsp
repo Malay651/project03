@@ -203,7 +203,22 @@ i.css {
         <div class="input-group-prepend">
           <div class="input-group-text"><i class="fa fa-user grey-text" style="font-size: 1rem;"></i> </div>
         </div>
+        	<%
+											if (list != null && !list.isEmpty()) {
+										%>
+										
         <%=HTMLUtility.getList("role", String.valueOf(dto.getRoleId()), list)%>
+        	<%
+											} else {
+										%>
+
+										<select name="studentId" class="form-control">
+											<option value="">-- No Data Available --</option>
+										</select>
+										<%
+											}
+										%>
+        
       </div>
     </div>							
 	<font color="red" class="pl-sm-5"> <%=ServletUtility.getErrorMessage("role", request)%></font></br>							

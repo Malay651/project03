@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="in.co.rays.project_3.dto">
+
+    <class name="UsageDTO" table="ST_USAGE">
+
+        <!-- Primary Key -->
+        <id name="id" type="java.lang.Long">
+            <column name="ID" />
+            <generator class="increment" />
+        </id>
+
+        <!-- Usage Code -->
+        <property name="usageCode" type="java.lang.String">
+            <column name="USAGECODE" />
+        </property>
+
+        <!-- Usage Name -->
+        <property name="usageName" type="java.lang.String">
+            <column name="USAGENAME" />
+        </property>
+
+        <!-- Usage Type -->
+        <property name="usageType" type="java.lang.String">
+            <column name="USAGETYPE" />
+        </property>
+
+        <!-- Status -->
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" />
+        </property>
+
+        <!-- Common Fields -->
+        <property name="createdBy" type="java.lang.String" length="50">
+            <column name="CREATEDBY" />
+        </property>
+
+        <property name="modifiedBy" type="java.lang.String" length="50">
+            <column name="MODIFIEDBY" />
+        </property>
+
+        <property name="createdDatetime" type="java.sql.Timestamp">
+            <column name="CREATEDDATETIME" />
+        </property>
+
+        <property name="modifiedDatetime" type="java.sql.Timestamp">
+            <column name="MODIFIEDDATETIME" />
+        </property>
+
+    </class>
+
+</hibernate-mapping>

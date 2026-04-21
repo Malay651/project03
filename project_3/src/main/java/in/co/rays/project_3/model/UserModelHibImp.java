@@ -48,13 +48,13 @@ public class UserModelHibImp implements UserModelInt {
 
 		} catch (HibernateException e) {
 			
-			HibDataSource.handleException(e);
+		
 			
 			if (tx != null) {
 				tx.rollback();
 
 			}
-				
+			HibDataSource.handleException(e);
 			throw new ApplicationException("Exception in User Add " + e.getMessage());
 		} finally {
 			session.close();

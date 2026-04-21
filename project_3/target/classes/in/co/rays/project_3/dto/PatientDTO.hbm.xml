@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 16, 2026, 11:55:31 AM by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <subclass name="in.co.rays.project_3.dto.PatientDTO" extends="in.co.rays.project_3.dto.BaseDTO" discriminator-value="PatientDTO" lazy="false">
+        <property name="name" type="java.lang.String">
+            <column name="NAME" />
+        </property>
+        <property name="disease" type="java.lang.String">
+            <column name="DISEASE" />
+        </property>
+        <property name="gender" type="java.lang.String">
+            <column name="GENDER" />
+        </property>
+        <property name="mobileNo" type="java.lang.String">
+            <column name="MOBILENO" />
+        </property>
+        <property name="dateOfVisit" type="java.util.Date">
+            <column name="DATEOFVISIT" />
+        </property>
+    </subclass>
+</hibernate-mapping>

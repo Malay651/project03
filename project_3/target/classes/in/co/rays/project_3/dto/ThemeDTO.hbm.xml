@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Apr 16, 2026, 11:55:31 AM by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <subclass name="in.co.rays.project_3.dto.ThemeDTO" extends="in.co.rays.project_3.dto.BaseDTO" discriminator-value="ThemeDTO" lazy="false">
+        <property name="themeCode" type="java.lang.String">
+            <column name="THEMECODE" />
+        </property>
+        <property name="themeName" type="java.lang.String">
+            <column name="THEMENAME" />
+        </property>
+        <property name="color" type="java.lang.String">
+            <column name="COLOR" />
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" />
+        </property>
+    </subclass>
+</hibernate-mapping>
