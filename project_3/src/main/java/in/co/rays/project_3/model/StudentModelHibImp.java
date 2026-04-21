@@ -16,6 +16,7 @@ import in.co.rays.project_3.util.HibDataSource;
 
 /**
  * Hibernate implements of Student model
+ * 
  * @authormalay dongre
  *
  */
@@ -37,10 +38,11 @@ public class StudentModelHibImp implements StudentModelInt {
 			tx.commit();
 
 		} catch (HibernateException e) {
-			e.printStackTrace();
+
 			if (tx != null) {
 				tx.rollback();
 			}
+			HibDataSource.handleException(e);
 			throw new ApplicationException("Exception in Student Add " + e.getMessage());
 		} finally {
 			session.close();
@@ -101,14 +103,14 @@ public class StudentModelHibImp implements StudentModelInt {
 
 	public StudentDTO findByPK(long pk) throws ApplicationException {
 		// TODO Auto-generated method stub
-		System.out.println(pk+"-==================----------");
+		System.out.println(pk + "-==================----------");
 		Session session = HibDataSource.getSession();
 		StudentDTO dto = null;
 		try {
 			dto = (StudentDTO) session.get(StudentDTO.class, pk);
 			System.out.println(dto);
 		} catch (HibernateException e) {
-
+			HibDataSource.handleException(e);
 			throw new ApplicationException("Exception : Exception in getting Student by pk");
 		} finally {
 			session.close();
@@ -118,23 +120,22 @@ public class StudentModelHibImp implements StudentModelInt {
 
 	public StudentDTO findByEmailId(String emailId) throws ApplicationException {
 		// TODO Auto-generated method stub
-		Session session=HibDataSource.getSession();
-		StudentDTO dto=null;
+		Session session = HibDataSource.getSession();
+		StudentDTO dto = null;
 		try {
-			Criteria criteria=session.createCriteria(StudentDTO.class);
+			Criteria criteria = session.createCriteria(StudentDTO.class);
 			criteria.add(Restrictions.eq("emailId", emailId));
-			List list=criteria.list();
-			if(list.size()==1){
-				dto=(StudentDTO) list.get(0);
+			List list = criteria.list();
+			if (list.size() == 1) {
+				dto = (StudentDTO) list.get(0);
 			}
 		} catch (HibernateException e) {
-           
-            throw new ApplicationException(
-                    "Exception in getting Student by email " + e.getMessage());
 
-        } finally {
-            session.close();
-        }
+			throw new ApplicationException("Exception in getting Student by email " + e.getMessage());
+
+		} finally {
+			session.close();
+		}
 		return dto;
 	}
 
@@ -145,30 +146,28 @@ public class StudentModelHibImp implements StudentModelInt {
 
 	public List list(int pageNo, int pageSize) throws ApplicationException {
 		// TODO Auto-generated method stub
-		 Session session = null;
-	        List list = null;
-	        try {
-	            session = HibDataSource.getSession();
-	            Criteria criteria = session.createCriteria(StudentDTO.class);
+		Session session = null;
+		List list = null;
+		try {
+			session = HibDataSource.getSession();
+			Criteria criteria = session.createCriteria(StudentDTO.class);
 
-	            // if page size is greater than zero then apply pagination
-	            if (pageSize > 0) {
-	                pageNo = ((pageNo - 1) * pageSize) + 1;
-	                criteria.setFirstResult(pageNo);
-	                criteria.setMaxResults(pageSize);
-	            }
+			// if page size is greater than zero then apply pagination
+			if (pageSize > 0) {
+				pageNo = ((pageNo - 1) * pageSize) + 1;
+				criteria.setFirstResult(pageNo);
+				criteria.setMaxResults(pageSize);
+			}
 
-	            list = criteria.list();
-	        } catch (HibernateException e) {
-	           
-	            throw new ApplicationException(
-	                    "Exception : Exception in  Student list");
-	        } finally {
-	            session.close();
-	        }
+			list = criteria.list();
+		} catch (HibernateException e) {
+			HibDataSource.handleException(e);
+			throw new ApplicationException("Exception : Exception in  Student list");
+		} finally {
+			session.close();
+		}
 
-	       
-	        return list;
+		return list;
 	}
 
 	public List search(StudentDTO dto) throws ApplicationException {
@@ -178,54 +177,51 @@ public class StudentModelHibImp implements StudentModelInt {
 
 	public List search(StudentDTO dto, int pageNo, int pageSize) throws ApplicationException {
 		// TODO Auto-generated method stub
-		System.out.println("llllllll"+dto.getCollegeId()+"....."+dto.getFirstName()+"''"+dto.getEmailId());
+		System.out.println("llllllll" + dto.getCollegeId() + "....." + dto.getFirstName() + "''" + dto.getEmailId());
 		Session session = null;
-        List list = null;
-        try {
-            session = HibDataSource.getSession();
-            Criteria criteria = session.createCriteria(StudentDTO.class);
-           if(dto!=null){
-            if (dto.getId() != null ) {
-                criteria.add(Restrictions.eq("id", dto.getId()));
-            }
-            if (dto.getFirstName() != null && dto.getFirstName().length() > 0) {
-                criteria.add(Restrictions.like("firstName", dto.getFirstName() + "%"));
-            }
-            if (dto.getEmailId() != null && dto.getEmailId().length() > 0) {
-                criteria.add(Restrictions.like("emailId", dto.getEmailId()
-                        + "%"));
-            }
-            if (dto.getLastName() != null && dto.getLastName().length() > 0) {
-                criteria.add(Restrictions.like("lastName", dto.getLastName()
-                        + "%"));
-            }
-            if (dto.getDob() != null && dto.getDob().getDate() > 0) {
-                criteria.add(Restrictions.eq("dob", dto.getDob()));
-            }
-            if (dto.getCollegeId() >0 ) {
-                criteria.add(Restrictions.eq("collegeId", dto.getCollegeId()));
-            }
-            
-            if (dto.getMobileNo() != null && dto.getMobileNo().length() > 0) {
-                criteria.add(Restrictions.like("mobileNo", dto.getMobileNo()
-                        + "%"));
-            }
-           }
-            // if page size is greater than zero the apply pagination
-            if (pageSize > 0) {
-                criteria.setFirstResult(((pageNo - 1) * pageSize));
-                criteria.setMaxResults(pageSize);
-            }
+		List list = null;
+		try {
+			session = HibDataSource.getSession();
+			Criteria criteria = session.createCriteria(StudentDTO.class);
+			if (dto != null) {
+				if (dto.getId() != null) {
+					criteria.add(Restrictions.eq("id", dto.getId()));
+				}
+				if (dto.getFirstName() != null && dto.getFirstName().length() > 0) {
+					criteria.add(Restrictions.like("firstName", dto.getFirstName() + "%"));
+				}
+				if (dto.getEmailId() != null && dto.getEmailId().length() > 0) {
+					criteria.add(Restrictions.like("emailId", dto.getEmailId() + "%"));
+				}
+				if (dto.getLastName() != null && dto.getLastName().length() > 0) {
+					criteria.add(Restrictions.like("lastName", dto.getLastName() + "%"));
+				}
+				if (dto.getDob() != null && dto.getDob().getDate() > 0) {
+					criteria.add(Restrictions.eq("dob", dto.getDob()));
+				}
+				if (dto.getCollegeId() > 0) {
+					criteria.add(Restrictions.eq("collegeId", dto.getCollegeId()));
+				}
 
-            list = criteria.list();
-        } catch (HibernateException e) {
-           
-            throw new ApplicationException("Exception in Student search");
-        } finally {
-            session.close();
-        }
+				if (dto.getMobileNo() != null && dto.getMobileNo().length() > 0) {
+					criteria.add(Restrictions.like("mobileNo", dto.getMobileNo() + "%"));
+				}
+			}
+			// if page size is greater than zero the apply pagination
+			if (pageSize > 0) {
+				criteria.setFirstResult(((pageNo - 1) * pageSize));
+				criteria.setMaxResults(pageSize);
+			}
 
-       return list;
+			list = criteria.list();
+		} catch (HibernateException e) {
+
+			throw new ApplicationException("Exception in Student search");
+		} finally {
+			session.close();
+		}
+
+		return list;
 	}
 
 }

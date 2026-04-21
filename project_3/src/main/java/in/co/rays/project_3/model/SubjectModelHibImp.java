@@ -8,7 +8,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
-import in.co.rays.project_3.dto.CollegeDTO;
 import in.co.rays.project_3.dto.CourseDTO;
 import in.co.rays.project_3.dto.SubjectDTO;
 import in.co.rays.project_3.exception.ApplicationException;
@@ -43,12 +42,14 @@ public class SubjectModelHibImp implements SubjectModelInt{
 			session.save(dto);
 			tx.commit();
 		} catch (HibernateException e) {
-			e.printStackTrace();
-			// TODO: handle exception
+			
+	
 			if (tx != null) {
 				tx.rollback();
 
 			}
+			HibDataSource.handleException(e);
+
 			throw new ApplicationException("Exception in subject Add " + e.getMessage());
 		} finally {
 			session.close();
@@ -181,6 +182,7 @@ public class SubjectModelHibImp implements SubjectModelInt{
 			
 		} catch (HibernateException e) {
             
+			HibDataSource.handleException(e);
             throw new ApplicationException(
                     "Exception : Exception in getting subject by pk");
         } finally {
@@ -204,6 +206,8 @@ public class SubjectModelHibImp implements SubjectModelInt{
 			}
 		} catch (HibernateException e) {
             
+			HibDataSource.handleException(e);
+			
             throw new ApplicationException(
                     "Exception in getting subject by Login " + e.getMessage());
 

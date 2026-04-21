@@ -51,7 +51,7 @@
   $(function() {
 		$("#datepicker2").datepicker({
 			dateFormat : 'dd/mm/yy',
-			//defaultDate : "06/06/2001",
+		//defaultDate : "06/06/2001",
 			changeMonth : true,
 			changeYear : true,
 			//yearRange: "c-20:c+0",

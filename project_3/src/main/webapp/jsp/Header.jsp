@@ -299,6 +299,20 @@
 							List</a>
 					</div></li> --%>
 
+	<%-- <li class="nav-item dropdown" style="padding-left: 5px"><a
+					class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+					role="button" data-toggle="dropdown" aria-haspopup="true"
+					aria-expanded="false"> <font style="color: white;">Limit
+					</font></a>
+
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+						<a class="dropdown-item" href="<%=ORSView.LIMIT_CTL%>"><i
+							class="fa fa-file"></i>Add Limit</a> <a class="dropdown-item"
+							href="<%=ORSView.LIMIT_LIST_CTL%>"><i class="fa fa-paste"></i>Limit
+							List</a>
+					</div></li> 
+
 	            <li class="nav-item dropdown" style="padding-left: 5px"><a
 					class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 					role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -312,6 +326,32 @@
 							href="<%=ORSView.THEME_LIST_CTL%>"><i class="fa fa-paste"></i>Theme List</a>
 					</div></li> 
 
+                             <li class="nav-item dropdown" style="padding-left: 5px"><a
+					class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+					role="button" data-toggle="dropdown" aria-haspopup="true"
+					aria-expanded="false"> <font style="color: white;">Usage
+					</font></a>
+
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+						<a class="dropdown-item" href="<%=ORSView.USAGE_CTL%>"><i
+							class="fa fa-file"></i>Add USAGE</a> <a class="dropdown-item"
+							href="<%=ORSView.USAGE_LIST_CTL%>"><i class="fa fa-paste"></i>Usage List</a>
+					</div></li> 
+                 
+                                              <li class="nav-item dropdown" style="padding-left: 5px"><a
+					class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+					role="button" data-toggle="dropdown" aria-haspopup="true"
+					aria-expanded="false"> <font style="color: white;">APIKey
+					</font></a>
+
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+						<a class="dropdown-item" href="<%=ORSView.APIKEY_CTL%>"><i
+							class="fa fa-file"></i>Add APIKEY</a> <a class="dropdown-item"
+							href="<%=ORSView.APIKEY_LIST_CTL%>"><i class="fa fa-paste"></i>APIKey List</a>
+					</div></li> 
+ --%>                 
 				<%
 					}
 					}

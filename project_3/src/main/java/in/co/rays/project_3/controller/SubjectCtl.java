@@ -11,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import in.co.rays.project_3.dto.BaseDTO;
+import in.co.rays.project_3.dto.CandidateDTO;
 import in.co.rays.project_3.dto.SubjectDTO;
 import in.co.rays.project_3.exception.ApplicationException;
 import in.co.rays.project_3.exception.DuplicateRecordException;
+import in.co.rays.project_3.model.CandidateModelInt;
 import in.co.rays.project_3.model.CourseModelInt;
 import in.co.rays.project_3.model.ModelFactory;
 import in.co.rays.project_3.model.SubjectModelInt;
@@ -127,10 +129,9 @@ public class SubjectCtl extends BaseCtl {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
-		log.debug("course ctl dopost start");
+		log.debug("subject ctl dopost start");
 
-		String op = DataUtility.getString(request.getParameter("operation"));
-
+		String op = request.getParameter("operation");
 		long id = DataUtility.getLong(request.getParameter("id"));
 
 		SubjectModelInt model = ModelFactory.getInstance().getSubjectModel();
@@ -138,56 +139,48 @@ public class SubjectCtl extends BaseCtl {
 		if (OP_SAVE.equalsIgnoreCase(op) || OP_UPDATE.equalsIgnoreCase(op)) {
 
 			SubjectDTO dto = (SubjectDTO) populateDTO(request);
+
 			try {
+
 				if (id > 0) {
-
+					dto.setId(id);
 					model.update(dto);
-					ServletUtility.setSuccessMessage("Data in successfully Update", request);
+					ServletUtility.setSuccessMessage("Subject Updated Successfully", request);
 				} else {
-					System.out.println("kkkkk+" + id);
-					long pk;
-					try {
-						pk = model.add(dto);
-						ServletUtility.setSuccessMessage("Data in successfully saved", request);
-					} catch (ApplicationException e) {
-						log.error(e);
-						ServletUtility.handleException(e, request, response);
-						return;
-					} catch (DuplicateRecordException e) {
-						ServletUtility.setDto(dto, request);
-						ServletUtility.setErrorMessage("subject  already exists", request);
-					}
-
+					model.add(dto);
+					ServletUtility.setSuccessMessage("Subject Added Successfully", request);
 				}
+
 				ServletUtility.setDto(dto, request);
 
 			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
+
+				ServletUtility.setErrorMessage(e.getMessage(), request);
+				ServletUtility.forward(getView(), request, response);
 				return;
-			} catch (Exception e) {
+
+			} catch (DuplicateRecordException e) {
+
+				ServletUtility.setErrorMessage("Candidate Code Already Exists", request);
 				ServletUtility.setDto(dto, request);
-				ServletUtility.setErrorMessage("subject id already exists", request);
-			}
-		} else if (OP_DELETE.equalsIgnoreCase(op)) {
-			SubjectDTO dto = (SubjectDTO) populateDTO(request);
-			try {
-				model.delete(dto);
-				ServletUtility.redirect(getView(), request, response);
-			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
+				ServletUtility.forward(getView(), request, response);
 				return;
 			}
+
 		} else if (OP_RESET.equalsIgnoreCase(op)) {
+
 			ServletUtility.redirect(ORSView.SUBJECT_CTL, request, response);
 			return;
+
 		} else if (OP_CANCEL.equalsIgnoreCase(op)) {
+
 			ServletUtility.redirect(ORSView.SUBJECT_LIST_CTL, request, response);
 			return;
 		}
+
 		ServletUtility.forward(getView(), request, response);
-		log.debug("course ctl dopost end");
+
+		log.debug("subject ctl dopost end");
 	}
 
 	@Override

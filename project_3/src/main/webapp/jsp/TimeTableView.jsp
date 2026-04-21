@@ -128,8 +128,24 @@ i.css {
 												<i class="fa fa-envelope grey-text" style="font-size: 1rem;"></i>
 											</div>
 										</div>
+											<%
+											if (l != null && !l.isEmpty()) {
+										%>
+										
 										<%=HTMLUtility.getList("courseId", String.valueOf(dto.getCourseId()), l)%>
+											<%
+											} else {
+										%>
+
+										<select name="courseId" class="form-control">
+											<option value="">-- No Data Available --</option>
+										</select>
+										<%
+											}
+										%>
+										
 									</div>
+									
 								</div>
 								<font color="red" class="pl-sm-5"> <%=ServletUtility.getErrorMessage("courseId", request)%></font></br>
 
@@ -142,7 +158,21 @@ i.css {
 												<i class="fa fa-book grey-text" style="font-size: 1rem;"></i>
 											</div>
 										</div>
+											<%
+											if (l != null && !l.isEmpty()) {
+										%>
 										<%=HTMLUtility.getList("subjectId", String.valueOf(dto.getSubId()), li)%>
+											<%
+											} else {
+										%>
+
+										<select name="subjectId" class="form-control">
+											<option value="">-- No Data Available --</option>
+										</select>
+										<%
+											}
+										%>
+										
 									</div>
 								</div>
 								<font color="red" class="pl-sm-5"> <%=ServletUtility.getErrorMessage("subjectId", request)%></font></br>

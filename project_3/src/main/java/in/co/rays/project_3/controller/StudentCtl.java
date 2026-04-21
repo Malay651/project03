@@ -11,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import in.co.rays.project_3.dto.BaseDTO;
+import in.co.rays.project_3.dto.CandidateDTO;
 import in.co.rays.project_3.dto.StudentDTO;
 import in.co.rays.project_3.exception.ApplicationException;
 import in.co.rays.project_3.exception.DuplicateRecordException;
+import in.co.rays.project_3.model.CandidateModelInt;
 import in.co.rays.project_3.model.CollegeModelInt;
 import in.co.rays.project_3.model.ModelFactory;
 import in.co.rays.project_3.model.StudentModelInt;
@@ -172,76 +174,53 @@ public class StudentCtl extends BaseCtl {
 
 		log.debug("StudentCtl Method doPost Started");
 
-		String op = DataUtility.getString(request.getParameter("operation"));
-
-		// get model
+		String op = request.getParameter("operation");
+		long id = DataUtility.getLong(request.getParameter("id"));
 
 		StudentModelInt model = ModelFactory.getInstance().getStudentModel();
-
-		long id = DataUtility.getLong(request.getParameter("id"));
 
 		if (OP_SAVE.equalsIgnoreCase(op) || OP_UPDATE.equalsIgnoreCase(op)) {
 
 			StudentDTO dto = (StudentDTO) populateDTO(request);
 
 			try {
+
 				if (id > 0) {
+					dto.setId(id);
 					model.update(dto);
-					ServletUtility.setSuccessMessage("Data is successfully Update", request);
+					ServletUtility.setSuccessMessage("Student Updated Successfully", request);
 				} else {
-					try {
-
-						model.add(dto);
-						ServletUtility.setSuccessMessage("Data is successfully saved", request);
-					} catch (ApplicationException e) {
-						log.error(e);
-						ServletUtility.handleException(e, request, response);
-						return;
-					} catch (DuplicateRecordException e) {
-						ServletUtility.setDto(dto, request);
-						ServletUtility.setErrorMessage("Student already exists", request);
-					}
-
+					model.add(dto);
+					ServletUtility.setSuccessMessage("Student Added Successfully", request);
 				}
 
 				ServletUtility.setDto(dto, request);
 
 			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
+
+				ServletUtility.setErrorMessage(e.getMessage(), request);
+				ServletUtility.forward(getView(), request, response);
 				return;
+
 			} catch (DuplicateRecordException e) {
+
+				ServletUtility.setErrorMessage("Student Already Exists", request);
 				ServletUtility.setDto(dto, request);
-				ServletUtility.setErrorMessage("Student Email Id already exists", request);
-			}
-
-		}
-
-		else if (OP_DELETE.equalsIgnoreCase(op)) {
-
-			StudentDTO dto = (StudentDTO) populateDTO(request);
-			try {
-				model.delete(dto);
-				ServletUtility.redirect(ORSView.STUDENT_LIST_CTL, request, response);
-				return;
-
-			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
+				ServletUtility.forward(getView(), request, response);
 				return;
 			}
-
-		} else if (OP_CANCEL.equalsIgnoreCase(op)) {
-
-			ServletUtility.redirect(ORSView.STUDENT_LIST_CTL, request, response);
-			return;
 
 		} else if (OP_RESET.equalsIgnoreCase(op)) {
 
 			ServletUtility.redirect(ORSView.STUDENT_CTL, request, response);
 			return;
 
+		} else if (OP_CANCEL.equalsIgnoreCase(op)) {
+
+			ServletUtility.redirect(ORSView.STUDENT_LIST_CTL, request, response);
+			return;
 		}
+
 		ServletUtility.forward(getView(), request, response);
 
 		log.debug("StudentCtl Method doPost Ended");

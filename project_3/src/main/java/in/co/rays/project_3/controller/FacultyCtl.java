@@ -11,9 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import in.co.rays.project_3.dto.BaseDTO;
+import in.co.rays.project_3.dto.CandidateDTO;
 import in.co.rays.project_3.dto.FacultyDTO;
 import in.co.rays.project_3.exception.ApplicationException;
+import in.co.rays.project_3.exception.DatabaseException;
 import in.co.rays.project_3.exception.DuplicateRecordException;
+import in.co.rays.project_3.model.CandidateModelInt;
 import in.co.rays.project_3.model.CollegeModelInt;
 import in.co.rays.project_3.model.CourseModelInt;
 import in.co.rays.project_3.model.FacultyModelInt;
@@ -199,7 +202,7 @@ public class FacultyCtl extends BaseCtl {
 
 		log.debug("faculty do post start");
 
-		String op = DataUtility.getString(request.getParameter("operation"));
+		String op = request.getParameter("operation");
 		long id = DataUtility.getLong(request.getParameter("id"));
 
 		FacultyModelInt model = ModelFactory.getInstance().getFacultyModel();
@@ -209,58 +212,50 @@ public class FacultyCtl extends BaseCtl {
 			FacultyDTO dto = (FacultyDTO) populateDTO(request);
 
 			try {
+
 				if (id > 0) {
-					model.update(dto);
-					ServletUtility.setSuccessMessage("Data is successfully Update", request);
+					dto.setId(id);
+					
+						model.update(dto);
+					
+					ServletUtility.setSuccessMessage("Faculty Updated Successfully", request);
 				} else {
-
-					try {
-						model.add(dto);
-						ServletUtility.setSuccessMessage("Data is successfully saved", request);
-					} catch (ApplicationException e) {
-						log.error(e);
-						ServletUtility.handleException(e, request, response);
-						return;
-					} catch (DuplicateRecordException e) {
-						ServletUtility.setDto(dto, request);
-						ServletUtility.setErrorMessage("Faculty id already exists", request);
-					}
-
+					model.add(dto);
+					ServletUtility.setSuccessMessage("faculty Added Successfully", request);
 				}
+
 				ServletUtility.setDto(dto, request);
 
 			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
+
+				ServletUtility.setErrorMessage(e.getMessage(), request);
+				ServletUtility.forward(getView(), request, response);
 				return;
 
-			} catch (Exception e) {
+			} catch (DuplicateRecordException e) {
+
+				ServletUtility.setErrorMessage("Faculty Id Already Exists", request);
 				ServletUtility.setDto(dto, request);
-				ServletUtility.setErrorMessage("Faculty id already exists", request);
+				ServletUtility.forward(getView(), request, response);
+				return;
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
-		} else if (OP_DELETE.equalsIgnoreCase(op)) {
-
-			FacultyDTO dto = (FacultyDTO) populateDTO(request);
-
-			try {
-				model.delete(dto);
-				ServletUtility.redirect(ORSView.FACULTY_LIST_CTL, request, response);
-				return;
-			} catch (ApplicationException e) {
-				log.debug(e);
-				ServletUtility.handleException(e, request, response);
-				return;
-			}
-		} else if (OP_CANCEL.equalsIgnoreCase(op)) {
-			ServletUtility.redirect(ORSView.FACULTY_LIST_CTL, request, response);
-			return;
 		} else if (OP_RESET.equalsIgnoreCase(op)) {
-			ServletUtility.redirect(ORSView.FACULTY_CTL, request, response);
+
+			ServletUtility.redirect(ORSView.CANDIDATE_CTL, request, response);
+			return;
+
+		} else if (OP_CANCEL.equalsIgnoreCase(op)) {
+
+			ServletUtility.redirect(ORSView.CANDIDATE_LIST_CTL, request, response);
 			return;
 		}
 
 		ServletUtility.forward(getView(), request, response);
+
 		log.debug("faculty do post end");
 	}
 

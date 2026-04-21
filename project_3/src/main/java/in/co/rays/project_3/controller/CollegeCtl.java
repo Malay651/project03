@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import in.co.rays.project_3.dto.BaseDTO;
+import in.co.rays.project_3.dto.CandidateDTO;
 import in.co.rays.project_3.dto.CollegeDTO;
 import in.co.rays.project_3.exception.ApplicationException;
 import in.co.rays.project_3.exception.DuplicateRecordException;
+import in.co.rays.project_3.model.CandidateModelInt;
 import in.co.rays.project_3.model.CollegeModelInt;
 import in.co.rays.project_3.model.ModelFactory;
 import in.co.rays.project_3.util.DataUtility;
@@ -121,8 +123,9 @@ public class CollegeCtl extends BaseCtl {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 
-		String op = request.getParameter("operation");
+		log.debug("CollegeCtl doPost started");
 
+		String op = request.getParameter("operation");
 		long id = DataUtility.getLong(request.getParameter("id"));
 
 		CollegeModelInt model = ModelFactory.getInstance().getCollegeModel();
@@ -132,46 +135,47 @@ public class CollegeCtl extends BaseCtl {
 			CollegeDTO dto = (CollegeDTO) populateDTO(request);
 
 			try {
+
 				if (id > 0) {
 					dto.setId(id);
 					model.update(dto);
-					ServletUtility.setDto(dto, request);
-
-					ServletUtility.setSuccessMessage("Record Successfully Updated", request);
-
+					ServletUtility.setSuccessMessage("College Updated Successfully", request);
 				} else {
-					System.out.println("college add" + dto + "id...." + id);
-					// long pk
 					model.add(dto);
-					ServletUtility.setSuccessMessage("Record Successfully Saved", request);
+					ServletUtility.setSuccessMessage("College Added Successfully", request);
 				}
 
 				ServletUtility.setDto(dto, request);
 
 			} catch (ApplicationException e) {
-				e.printStackTrace();
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
+
+				ServletUtility.setErrorMessage(e.getMessage(), request);
+				ServletUtility.forward(getView(), request, response);
 				return;
 
 			} catch (DuplicateRecordException e) {
-				ServletUtility.setDto(dto, request);
+
 				ServletUtility.setErrorMessage("College Already Exists", request);
+				ServletUtility.setDto(dto, request);
+				ServletUtility.forward(getView(), request, response);
+				return;
 			}
 
 		} else if (OP_RESET.equalsIgnoreCase(op)) {
-			ServletUtility.redirect(ORSView.COLLEGE_CTL, request, response);
+
+			ServletUtility.redirect(ORSView.CANDIDATE_CTL, request, response);
 			return;
 
 		} else if (OP_CANCEL.equalsIgnoreCase(op)) {
 
-			ServletUtility.redirect(ORSView.COLLEGE_LIST_CTL, request, response);
+			ServletUtility.redirect(ORSView.CANDIDATE_LIST_CTL, request, response);
 			return;
-
 		}
-		ServletUtility.forward(getView(), request, response);
-	}
 
+		ServletUtility.forward(getView(), request, response);
+
+		log.debug("CollegeCtl doPost ended");
+	}
 	@Override
 	protected String getView() {
 

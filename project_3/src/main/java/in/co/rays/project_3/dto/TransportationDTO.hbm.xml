@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated 17-Feb-2026, 11:31:28 am by Hibernate Tools 3.5.0.Final -->
+<!-- Generated Apr 16, 2026, 11:55:31 AM by Hibernate Tools 3.5.0.Final -->
 <hibernate-mapping>
     <subclass name="in.co.rays.project_3.dto.TransportationDTO" extends="in.co.rays.project_3.dto.BaseDTO" discriminator-value="TransportationDTO" lazy="false">
         <property name="Description" type="java.lang.String">

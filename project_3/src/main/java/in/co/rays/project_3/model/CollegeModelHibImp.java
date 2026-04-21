@@ -33,11 +33,13 @@ public class CollegeModelHibImp implements CollegeModelInt {
 			session.save(dto);
 			tx.commit();
 		} catch (HibernateException e) {
-			e.printStackTrace();
+			
+			
 			if (tx != null) {
 				tx.rollback();
 
 			}
+			HibDataSource.handleException(e);
 			throw new ApplicationException("Exception in college Add " + e.getMessage());
 		} finally {
 			session.close();
@@ -174,7 +176,8 @@ public class CollegeModelHibImp implements CollegeModelInt {
 			dto = (CollegeDTO) session.get(CollegeDTO.class, pk);
 			System.out.println(dto);
 		} catch (HibernateException e) {
-
+			
+			HibDataSource.handleException(e);
 			throw new ApplicationException("Exception : Exception in getting course by pk");
 		} finally {
 			session.close();
@@ -195,7 +198,7 @@ public class CollegeModelHibImp implements CollegeModelInt {
 				dto=(CollegeDTO) list.get(0);
 			}
 		} catch (HibernateException e) {
-            
+			HibDataSource.handleException(e);
             throw new ApplicationException(
                     "Exception in getting User by Login " + e.getMessage());
 

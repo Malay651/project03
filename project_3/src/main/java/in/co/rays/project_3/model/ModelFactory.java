@@ -285,4 +285,46 @@ public final class ModelFactory {
 		}
 		return ThemeModel;
 	}
+	
+	public LimitModelInt getLimitModel() {
+		LimitModelInt LimitModel = (LimitModelInt) modelCache.get("LimitModel");
+		if (LimitModel == null) {
+			if ("Hibernate".equals(DATABASE)) {
+				LimitModel = new LimitModelHibImpl();
+			}
+			if ("JDBC".equals(DATABASE)) {
+				LimitModel = new LimitModelHibImpl();
+			}
+			modelCache.put("LimitModel", LimitModel);
+		}
+		return LimitModel;
+	}
+	
+	public UsageModelInt getUsageModel() {
+		UsageModelInt UsageModel = (UsageModelInt) modelCache.get("UsageModel");
+		if (UsageModel == null) {
+			if ("Hibernate".equals(DATABASE)) {
+				UsageModel = new UsageModelHibImpl();
+			}
+			if ("JDBC".equals(DATABASE)) {
+				UsageModel = new UsageModelHibImpl();
+			}
+			modelCache.put("UsageModel", UsageModel);
+		}
+		return UsageModel;
+	}
+	
+	public APIKeyModelInt getAPIKeyModel() {
+		APIKeyModelInt APIKeyModel = (APIKeyModelInt) modelCache.get("APIKeyModel");
+		if (APIKeyModel == null) {
+			if ("Hibernate".equals(DATABASE)) {
+				APIKeyModel = new APIKeyModelHibImpl();
+			}
+			if ("JDBC".equals(DATABASE)) {
+				APIKeyModel = new APIKeyModelHibImpl();
+			}
+			modelCache.put("APIKeyModel", APIKeyModel);
+		}
+		return APIKeyModel;
+	}
 }

@@ -151,7 +151,22 @@ i.css {
 												<i class="fa fa-user-alt grey-text" style="font-size: 1rem;"></i>
 											</div>
 										</div>
+											<%
+											if (l != null && !l.isEmpty()) {
+										%>
+										
 										<%=HTMLUtility.getList("courseId", String.valueOf(dto.getCourseId()), l)%>
+											<%
+											} else {
+										%>
+
+										<select name="courseId" class="form-control">
+											<option value="">-- No Data Available --</option>
+										</select>
+										<%
+											}
+										%>
+										
 									</div>
 								</div>
 								<font color="red" class="pl-sm-5"> <%=ServletUtility.getErrorMessage("courseId", request)%></font></br>

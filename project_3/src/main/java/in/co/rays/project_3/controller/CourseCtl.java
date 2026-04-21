@@ -10,9 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import in.co.rays.project_3.dto.BaseDTO;
+import in.co.rays.project_3.dto.CandidateDTO;
 import in.co.rays.project_3.dto.CourseDTO;
 import in.co.rays.project_3.exception.ApplicationException;
 import in.co.rays.project_3.exception.DuplicateRecordException;
+import in.co.rays.project_3.model.CandidateModelInt;
 import in.co.rays.project_3.model.CourseModelInt;
 import in.co.rays.project_3.model.ModelFactory;
 import in.co.rays.project_3.util.DataUtility;
@@ -113,8 +115,7 @@ public class CourseCtl extends BaseCtl {
 
 		log.debug("course ctl do post start");
 
-		String op = DataUtility.getString(request.getParameter("operation"));
-
+		String op = request.getParameter("operation");
 		long id = DataUtility.getLong(request.getParameter("id"));
 
 		CourseModelInt model = ModelFactory.getInstance().getCourseModel();
@@ -124,55 +125,43 @@ public class CourseCtl extends BaseCtl {
 			CourseDTO dto = (CourseDTO) populateDTO(request);
 
 			try {
-				if (id > 0) {
-					model.update(dto);
-					dto.setId(id);
-					ServletUtility.setSuccessMessage("Data Successfully Update", request);
-					ServletUtility.setDto(dto, request);
-				} else {
 
-					try {
-						model.add(dto);
-						ServletUtility.setSuccessMessage("Data Successfully saved", request);
-						ServletUtility.setDto(dto, request);
-					} catch (ApplicationException e) {
-						log.error(e);
-						ServletUtility.handleException(e, request, response);
-						return;
-					} catch (DuplicateRecordException e) {
-						ServletUtility.setDto(dto, request);
-						ServletUtility.setErrorMessage("course  already exists", request);
-					}
+				if (id > 0) {
+					dto.setId(id);
+					model.update(dto);
+					ServletUtility.setSuccessMessage("Course Updated Successfully", request);
+				} else {
+					model.add(dto);
+					ServletUtility.setSuccessMessage("Course Added Successfully", request);
 				}
 
-			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
-				return;
-			} catch (Exception e) {
 				ServletUtility.setDto(dto, request);
-				ServletUtility.setErrorMessage("Login id already exists", request);
-			}
-		} else if (OP_DELETE.equalsIgnoreCase(op)) {
-			CourseDTO dto = (CourseDTO) populateDTO(request);
-			try {
-				model.delete(dto);
-				ServletUtility.redirect(ORSView.COURSE_LIST_CTL, request, response);
-				return;
+
 			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
+
+				ServletUtility.setErrorMessage(e.getMessage(), request);
+				ServletUtility.forward(getView(), request, response);
+				return;
+
+			} catch (DuplicateRecordException e) {
+
+				ServletUtility.setErrorMessage("Course Already Exists", request);
+				ServletUtility.setDto(dto, request);
+				ServletUtility.forward(getView(), request, response);
 				return;
 			}
-		} else if (OP_CANCEL.equalsIgnoreCase(op)) {
-			ServletUtility.redirect(ORSView.COURSE_LIST_CTL, request, response);
-			return;
 
 		} else if (OP_RESET.equalsIgnoreCase(op)) {
+
 			ServletUtility.redirect(ORSView.COURSE_CTL, request, response);
 			return;
 
+		} else if (OP_CANCEL.equalsIgnoreCase(op)) {
+
+			ServletUtility.redirect(ORSView.COURSE_LIST_CTL, request, response);
+			return;
 		}
+
 		ServletUtility.forward(getView(), request, response);
 
 		log.debug("course ctl do post end");

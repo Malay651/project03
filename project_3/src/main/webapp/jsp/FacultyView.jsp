@@ -251,7 +251,22 @@ i.css {
 												<i class="fa fa-building grey-text" style="font-size: 1rem;"></i>
 											</div>
 										</div>
+											<%
+											if (ll != null && !ll.isEmpty()) {
+										%>
+										
 										<%=HTMLUtility.getList("collegeId", String.valueOf(dto.getCollegeId()), ll)%></div>
+											<%
+											} else {
+										%>
+
+										<select name="studentId" class="form-control">
+											<option value="">-- No Data Available --</option>
+										</select>
+										<%
+											}
+										%>
+										
 								</div>
 								<font color="red" class="pl-sm-5"> <%=ServletUtility.getErrorMessage("collegeId", request)%></font></br>
 
@@ -264,7 +279,22 @@ i.css {
 												<i class="fa fa-book grey-text" style="font-size: 1rem;"></i>
 											</div>
 										</div>
-										<%=HTMLUtility.getList("subjectId", String.valueOf(dto.getSubjectId()), llist)%></div>
+											<%
+											if (ll != null && !ll.isEmpty()) {
+										%>
+											<%=HTMLUtility.getList("subjectId", String.valueOf(dto.getSubjectId()), llist)%></div>
+											<%
+											} else {
+										%>
+
+										<select name="subjectId" class="form-control">
+											<option value="">-- No Data Available --</option>
+										</select>
+										<%
+											}
+										%>
+										
+						
 								</div>
 								<font color="red" class="pl-sm-5"> <%=ServletUtility.getErrorMessage("subjectId", request)%></font></br>
 
@@ -277,7 +307,23 @@ i.css {
 												<i class="fa fa-user-alt grey-text" style="font-size: 1rem;"></i>
 											</div>
 										</div>
+											<%
+											if (ll != null && !ll.isEmpty()) {
+										%>
 										<%=HTMLUtility.getList("courseId", String.valueOf(dto.getCourseId()), lli)%></div>
+											<%
+											} else {
+										%>
+
+										<select name="courseId" class="form-control">
+											<option value="">-- No Data Available --</option>
+										</select>
+										<%
+											}
+										%>
+										
+										
+										
 								</div>
 								<font color="red" class="pl-sm-5"> <%=ServletUtility.getErrorMessage("courseId", request)%></font></br>
 								</br>

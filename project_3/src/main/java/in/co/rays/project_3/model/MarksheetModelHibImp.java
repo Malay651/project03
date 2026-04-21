@@ -47,10 +47,11 @@ public class MarksheetModelHibImp implements MarksheetModelInt {
 			tx.commit();
 
 		} catch (HibernateException e) {
-			e.printStackTrace();
+			
 			if (tx != null) {
 				tx.rollback();
 			}
+			HibDataSource.handleException(e);
 			throw new ApplicationException("Exception in marksheet Add " + e.getMessage());
 		} finally {
 			session.close();
@@ -229,7 +230,7 @@ public class MarksheetModelHibImp implements MarksheetModelInt {
 
 			}
 		} catch (Exception e) {
-
+			HibDataSource.handleException(e);
 			throw new ApplicationException("Exception in getting Marksheet by pk" + e.getMessage());
 
 		} finally {

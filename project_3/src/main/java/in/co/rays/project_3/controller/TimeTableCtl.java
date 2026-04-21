@@ -11,8 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import in.co.rays.project_3.dto.BaseDTO;
+import in.co.rays.project_3.dto.CandidateDTO;
 import in.co.rays.project_3.dto.TimetableDTO;
 import in.co.rays.project_3.exception.ApplicationException;
+import in.co.rays.project_3.exception.DatabaseException;
+import in.co.rays.project_3.exception.DuplicateRecordException;
+import in.co.rays.project_3.model.CandidateModelInt;
 import in.co.rays.project_3.model.CourseModelInt;
 import in.co.rays.project_3.model.ModelFactory;
 import in.co.rays.project_3.model.SubjectModelInt;
@@ -145,75 +149,58 @@ public class TimeTableCtl extends BaseCtl {
 
 		log.debug("time table dopost start");
 
-		String op = DataUtility.getString(request.getParameter("operation"));
-
+		String op = request.getParameter("operation");
 		long id = DataUtility.getLong(request.getParameter("id"));
 
 		TimetableModelInt model = ModelFactory.getInstance().getTimetableModel();
 
 		if (OP_SAVE.equalsIgnoreCase(op) || OP_UPDATE.equalsIgnoreCase(op)) {
+
 			TimetableDTO dto = (TimetableDTO) populateDTO(request);
-			TimetableDTO dto1 = null;
-			TimetableDTO dto2 = null;
-			TimetableDTO dto3 = null;
+
 			try {
+
 				if (id > 0) {
 					dto.setId(id);
 					model.update(dto);
-					ServletUtility.setDto(dto, request);
-
-					ServletUtility.setSuccessMessage("Data is successfully Update", request);
+					ServletUtility.setSuccessMessage("Timetable Updated Successfully", request);
 				} else {
-					try {
-						/*
-						 * dto1 = model.checkByCourseName(dto.getCourseId(), dto.getExamDate()); dto2 =
-						 * model.checkBySubjectName(dto.getCourseId(), dto.getSubId(),
-						 * dto.getExamDate()); dto3 = model.checkBysemester(dto.getCourseId(),
-						 * dto.getSubId(), dto.getSemester(), dto.getExamDate());
-						 */
-						if (dto1 == null || dto2 == null || dto3 == null) {
-							model.add(dto);
-							ServletUtility.setDto(dto, request);
-							ServletUtility.setSuccessMessage("Data is successfully saved", request);
-						} else {
-							ServletUtility.setDto(dto, request);
-							ServletUtility.setErrorMessage("Exam already exist!", request);
-
-						}
-					} catch (Exception e) {
-
-						e.printStackTrace();
-					}
-
+					model.add(dto);
+					ServletUtility.setSuccessMessage("Timetable Added Successfully", request);
 				}
 
-			} catch (Exception e) {
 				ServletUtility.setDto(dto, request);
-				ServletUtility.setErrorMessage("Login id already exists", request);
-			}
-		} else if (OP_DELETE.equalsIgnoreCase(op)) {
 
-			TimetableDTO dto = (TimetableDTO) populateDTO(request);
-			try {
-				model.delete(dto);
-				ServletUtility.redirect(ORSView.TIMETABLE_LIST_CTL, request, response);
-				return;
 			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
+
+				ServletUtility.setErrorMessage(e.getMessage(), request);
+				ServletUtility.forward(getView(), request, response);
 				return;
+
+			} catch (DuplicateRecordException e) {
+
+				ServletUtility.setErrorMessage("Exam Already Exists", request);
+				ServletUtility.setDto(dto, request);
+				ServletUtility.forward(getView(), request, response);
+				return;
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+
+		} else if (OP_RESET.equalsIgnoreCase(op)) {
+
+			ServletUtility.redirect(ORSView.TIMETABLE_CTL, request, response);
+			return;
 
 		} else if (OP_CANCEL.equalsIgnoreCase(op)) {
 
 			ServletUtility.redirect(ORSView.TIMETABLE_LIST_CTL, request, response);
 			return;
-		} else if (OP_RESET.equalsIgnoreCase(op)) {
-
-			ServletUtility.redirect(ORSView.TIMETABLE_CTL, request, response);
-			return;
 		}
+
 		ServletUtility.forward(getView(), request, response);
+
 		log.debug("time table dopost end");
 	}
 

@@ -10,9 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import in.co.rays.project_3.dto.BaseDTO;
+import in.co.rays.project_3.dto.CandidateDTO;
 import in.co.rays.project_3.dto.RoleDTO;
 import in.co.rays.project_3.exception.ApplicationException;
 import in.co.rays.project_3.exception.DuplicateRecordException;
+import in.co.rays.project_3.model.CandidateModelInt;
 import in.co.rays.project_3.model.ModelFactory;
 import in.co.rays.project_3.model.RoleModelInt;
 import in.co.rays.project_3.util.DataUtility;
@@ -101,9 +103,7 @@ public class RoleCtl extends BaseCtl {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-
 		String op = request.getParameter("operation");
-
 		long id = DataUtility.getLong(request.getParameter("id"));
 
 		RoleModelInt model = ModelFactory.getInstance().getRoleModel();
@@ -113,63 +113,41 @@ public class RoleCtl extends BaseCtl {
 			RoleDTO dto = (RoleDTO) populateDTO(request);
 
 			try {
+
 				if (id > 0) {
-
+					dto.setId(id);
 					model.update(dto);
-
-					ServletUtility.setSuccessMessage("Successfully Updated", request);
+					ServletUtility.setSuccessMessage("Role Updated Successfully", request);
 				} else {
-					try {
-						// long pk =
-						model.add(dto);
-						ServletUtility.setSuccessMessage("Successfully Saved", request);
-					} catch (ApplicationException e) {
-						log.error(e);
-						ServletUtility.handleException(e, request, response);
-						return;
-					} catch (DuplicateRecordException e) {
-						ServletUtility.setDto(dto, request);
-						ServletUtility.setErrorMessage("Role already exists", request);
-					}
-
+					model.add(dto);
+					ServletUtility.setSuccessMessage("Role Added Successfully", request);
 				}
 
 				ServletUtility.setDto(dto, request);
 
 			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
+
+				ServletUtility.setErrorMessage(e.getMessage(), request);
+				ServletUtility.forward(getView(), request, response);
 				return;
+
 			} catch (DuplicateRecordException e) {
+
+				ServletUtility.setErrorMessage("Role Already Exists", request);
 				ServletUtility.setDto(dto, request);
-				ServletUtility.setErrorMessage("Role already exists", request);
-			}
-
-		} else if (OP_DELETE.equalsIgnoreCase(op)) {
-
-			RoleDTO dto = (RoleDTO) populateDTO(request);
-			try {
-				model.delete(dto);
-
-				ServletUtility.redirect(ORSView.ROLE_LIST_CTL, request, response);
-				return;
-
-			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
+				ServletUtility.forward(getView(), request, response);
 				return;
 			}
-
-		} else if (OP_CANCEL.equalsIgnoreCase(op)) {
-
-			ServletUtility.redirect(ORSView.ROLE_LIST_CTL, request, response);
-			return;
 
 		} else if (OP_RESET.equalsIgnoreCase(op)) {
 
 			ServletUtility.redirect(ORSView.ROLE_CTL, request, response);
 			return;
 
+		} else if (OP_CANCEL.equalsIgnoreCase(op)) {
+
+			ServletUtility.redirect(ORSView.ROLE_LIST_CTL, request, response);
+			return;
 		}
 
 		ServletUtility.forward(getView(), request, response);

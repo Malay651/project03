@@ -36,13 +36,17 @@ public class CourseModelHibImp implements CourseModelInt {
 			pk = dto.getId();
 			tx.commit();
 		} catch (HibernateException e) {
-			e.printStackTrace();
-			// TODO: handle exception
+			
+		
+			
 			if (tx != null) {
 				tx.rollback();
 
 			}
+			HibDataSource.handleException(e);
 			throw new ApplicationException("Exception in course Add " + e.getMessage());
+			  
+
 		} finally {
 			session.close();
 		}
@@ -106,6 +110,9 @@ public class CourseModelHibImp implements CourseModelInt {
 			dto = (CourseDTO) session.get(CourseDTO.class, pk);
 		} catch (HibernateException e) {
 
+			
+			HibDataSource.handleException(e);
+			
 			throw new ApplicationException("Exception : Exception in getting course by pk");
 		} finally {
 			session.close();
@@ -128,6 +135,7 @@ public class CourseModelHibImp implements CourseModelInt {
 			}
 		} catch (HibernateException e) {
 
+			HibDataSource.handleException(e);
 			throw new ApplicationException("Exception in getting User by Login " + e.getMessage());
 
 		} finally {

@@ -47,11 +47,12 @@ public class TimetableModelHibImp implements TimetableModelInt {
 			pk = dto.getId();
 			tx.commit();
 		} catch (HibernateException e) {
-			e.printStackTrace();
-			// TODO: handle exception
+			
+		
 			if (tx != null) {
 				tx.rollback();
 			}
+			HibDataSource.handleException(e);
 			throw new ApplicationException("Exception in timetable Add " + e.getMessage());
 		} finally {
 			session.close();

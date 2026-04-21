@@ -1,6 +1,7 @@
 package in.co.rays.project_3.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -12,9 +13,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.jdt.internal.compiler.env.ISourceMethod;
 
 import in.co.rays.project_3.dto.BaseDTO;
+import in.co.rays.project_3.dto.CandidateDTO;
 import in.co.rays.project_3.dto.MarksheetDTO;
 import in.co.rays.project_3.exception.ApplicationException;
 import in.co.rays.project_3.exception.DuplicateRecordException;
+import in.co.rays.project_3.model.CandidateModelInt;
 import in.co.rays.project_3.model.MarksheetModelInt;
 import in.co.rays.project_3.model.ModelFactory;
 import in.co.rays.project_3.model.StudentModelInt;
@@ -27,7 +30,7 @@ import in.co.rays.project_3.util.ServletUtility;
  * marksheeet functionality controller.to perform add,delete and update
  * operation
  * 
- * @authormalay dongre
+ * @author malay dongre
  *
  */
 @WebServlet(urlPatterns = { "/ctl/MarksheetCtl" })
@@ -41,13 +44,13 @@ public class MarksheetCtl extends BaseCtl {
 		
 		StudentModelInt model = ModelFactory.getInstance().getStudentModel();
 		try {
-			List li = model.list();
-			request.setAttribute("studenList", li);
-			System.out.println("add marksheet" + li);
+			List list = model.list();
+			request.setAttribute("studenList", list);
+			
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			log.error(e);
+			e.printStackTrace();
 		}
 	}
 
@@ -177,37 +180,45 @@ public class MarksheetCtl extends BaseCtl {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		
-		log.debug("marksheet ctl dopost  start");
+		log.debug("MarksheetCtl doPost started");
 
-		String op = DataUtility.getString(request.getParameter("operation"));
+		String op = request.getParameter("operation");
 		long id = DataUtility.getLong(request.getParameter("id"));
 
 		MarksheetModelInt model = ModelFactory.getInstance().getMarksheetModel();
 
 		if (OP_SAVE.equalsIgnoreCase(op) || OP_UPDATE.equalsIgnoreCase(op)) {
+
 			MarksheetDTO dto = (MarksheetDTO) populateDTO(request);
+
 			try {
+
 				if (id > 0) {
 					dto.setId(id);
 					model.update(dto);
-					ServletUtility.setSuccessMessage("Data is successfully Updated", request);
+					ServletUtility.setSuccessMessage("Marksheet Updated Successfully", request);
 				} else {
 					model.add(dto);
-					ServletUtility.setSuccessMessage("Data is successfully saved", request);
+					ServletUtility.setSuccessMessage("Marksheet Added Successfully", request);
 				}
+
 				ServletUtility.setDto(dto, request);
 
 			} catch (ApplicationException e) {
-				log.error(e);
-				ServletUtility.handleException(e, request, response);
-				return;
-			} catch (DuplicateRecordException e) {
-				ServletUtility.setDto(dto, request);
-				ServletUtility.setErrorMessage("Roll no already exists", request);
-			}
 
-		} else if (OP_DELETE.equalsIgnoreCase(op)) {
+				ServletUtility.setErrorMessage(e.getMessage(), request);
+				ServletUtility.forward(getView(), request, response);
+				return;
+
+			} catch (DuplicateRecordException e) {
+
+				ServletUtility.setErrorMessage("Roll_no Already Exists", request);
+				ServletUtility.setDto(dto, request);
+				ServletUtility.forward(getView(), request, response);
+				return;
+			}
+			
+		 } else if (OP_DELETE.equalsIgnoreCase(op)) {
 			MarksheetDTO dto = (MarksheetDTO) populateDTO(request);
 			try {
 				model.delete(dto);
@@ -221,15 +232,19 @@ public class MarksheetCtl extends BaseCtl {
 			}
 
 		} else if (OP_RESET.equalsIgnoreCase(op)) {
+
 			ServletUtility.redirect(ORSView.MARKSHEET_CTL, request, response);
 			return;
+
 		} else if (OP_CANCEL.equalsIgnoreCase(op)) {
+
 			ServletUtility.redirect(ORSView.MARKSHEET_LIST_CTL, request, response);
 			return;
 		}
+
 		ServletUtility.forward(getView(), request, response);
 
-		log.debug("marksheet ctl dopost  end");
+		log.debug("MarksheetCtl doPost ended");
 	}
 
 	@Override
